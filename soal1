@@ -1,0 +1,18 @@
+function lelang(a){
+    var harga = 10000
+    for(var i = 1 ; i<=a; i++){
+            if(i%4==0){
+            harga = Math.ceil(harga*1.1)
+             }
+             else{
+            harga = Math.ceil(harga*1.2)
+            }
+    }
+    if(harga<30000000){
+        console.log('Menit ke '+ a+ ' ' +harga)
+    }
+    else{
+        console.log('Menit ke '+ a+' barang sudah terjual')
+    }
+}
+console.log(lelang(50))
