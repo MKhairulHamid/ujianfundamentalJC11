@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Madding</title>
+    <style>
+            table, tr, td{
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 10px;
+            }
+        </style>
+    
+</head>
+<body>
+<center>
+    <h1> Madding </h1>
+    <form id = "formLogin">
+        <p> Username : <input type="text">
+        <p> Password : <input type="password">
+    </form>
+    <button onclick="login()">  Login </button>
+
+    <table>
+            <thead>
+                <tr>
+                    <td>No</td>
+                    <td>Kegiatan</td>
+                    <td>Hari</td>
+                    <td>Poster</td>
+                    <td>Act</td>
+                </tr>
+            </thead>
+            <tbody id="isiMadding">
+
+            </tbody>
+           <h2 id="loginStatus"></h2>
+
+</center>
+</body>
+<script>
+    class cetakanUser {
+        constructor(user,password,role){
+            this.username = username;
+            this.password = password;
+            this.role = role ;
+        }
+    }
+    class cetakanKegiatan {
+        constructor(namaKegiatan,hari,poster){
+            this.namaKegiatan = namaKegiatan;
+            this.hari = hari;
+            this.poster = poster;
+        }
+    }
+
+    var user = [
+        {
+            username : 'hamid',
+            password :'123',
+            role : 'user'
+        },
+        {
+            username : 'admin',
+            password : 'admin',
+            role : 'admin'
+        }
+    ]
+    var kegiatan = [
+        {
+            namaKegiatan : 'Lari',
+            hari : 'Senin',
+            poster : 'https://img.okezone.com/content/2015/12/02/481/1259636/sesendok-gula-sebelum-maraton-bunuh-rasa-sakit-aY6vVrUiFT.jpg'
+        },
+        {
+            namaKegiatan : 'Estafet',
+            hari : 'Selasa',
+            poster : 'https://moondoggiesmusic.com/wp-content/uploads/2019/07/Teknik-Lari-Estafet.png'
+            
+        }
+
+    ]
+    function login(){
+        var userNameLogin = document.getElementById('formLogin').elements[0].value;
+        var passwordLogin = document.getElementById('formLogin').elements[1].value;
+        var varbantu = 0
+        for(var i = 0 ; i<user.length ; i++){
+            if(userNameLogin === user[i].username && passwordLogin === user[i].password){
+                varbantu ++
+                document.getElementById("loginStatus").innerHTML = user[i].username
+                printIsiMadding(user[i].role)
+            }
+        }
+            if(varbantu==0) {
+                document.getElementById("loginStatus").innerHTML = 'password salah'
+            }
+
+            
+        
+        
+    }
+    function printIsiMadding(role){
+            if(role === 'user'){
+                var output = ''
+                for(var i = 0 ; i<kegiatan.length ; i++){
+                    output += `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td>${kegiatan[i].namaKegiatan}</td>
+                        <td>${kegiatan[i].hari}</td>
+                        <td><img src="${kegiatan[i].poster}" alt=${kegiatan[i].namaKegiatan} width="100px" ></td>
+                        <td></td>
+                    </tr>
+                    `
+                    
+                }
+                output += `<input type="button" value="Logout" onclick="logout()">`
+                return document.getElementById("isiMadding").innerHTML = output
+                
+            }
+            else if(role === 'admin'){
+                var output = ''
+                for(var i = 0 ; i<kegiatan.length ; i++){
+                    output += `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td>${kegiatan[i].namaKegiatan}</td>
+                        <td>${kegiatan[i].hari}</td>
+                        <td><img src="${kegiatan[i].poster}" alt=${kegiatan[i].namaKegiatan} width="100px" ></td>
+                        <td> <input type="button" value ="Delete" onclick="konfirmasiDelete(${i})">
+                            <input type="button" value ="Edit" onclick="editKegiatan(${i})">
+                        </td>
+                    </tr>
+                    `
+                    
+                }
+                // output += `<input type="button" value="Logout" onclick="logout()">`
+                return document.getElementById("isiMadding").innerHTML = output + 
+
+                                            `
+                                        <tr>
+                                            <td></td>    
+                                            <td><input type="text" id="newNamaKegiatan"></td>    
+                                            <td>
+                                                <select name="hari">
+                                                 <option value="senin">senin</option>
+                                                 <option value="selasa">selasa</option>
+                                                <option value="rabu">rabu</option>
+                                                 <option value="kamis">kamis</option>
+                                                <option value="jumat">jumat</option>
+                                                 <option value="sabtu">sabtu</option>
+                                                 <option value="minggu">minggu</option>
+                                            </select>
+                                                
+                                            </td>    
+                                            <td><input type="text" id="newPoster"></td>    
+                                            <td><input type="button" value="Add Todo" onclick="addToDo()"></td>    
+                                        </tr>
+                                    `
+            }
+    
+    }
+    function konfirmasiDelete(index){
+        var output = ''
+        for(var i = 0 ; i<kegiatan.length ; i++){
+            if(i==index){
+                output += `
+                <tr>
+                        <td>${i+1}</td>
+                        <td>${kegiatan[i].namaKegiatan}</td>
+                        <td>${kegiatan[i].hari}</td>
+                        <td><img src="${kegiatan[i].poster}" alt=${kegiatan[i].namaKegiatan} width="100px" ></td>
+                        <td> <input type="button" value ="Yes" onclick="deleteKegiatan(${i})">
+                            <input type="button" value ="No" onclick="cancelDelete()">
+                        </td>
+                    </tr>
+                `
+                document.getElementById("isiMadding").innerHTML = output
+            }
+            
+            else {
+                output += `
+                <tr>
+                        <td>${i+1}</td>
+                        <td>${kegiatan[i].namaKegiatan}</td>
+                        <td>${kegiatan[i].hari}</td>
+                        <td><img src="${kegiatan[i].poster}" alt=${kegiatan[i].namaKegiatan} width="100px" ></td>
+                        <td> <input type="button" value ="Delete" onclick=kofirmasiDelete(${i})>
+                            <input type="button" value ="Edit" onclick=editKegiatan(${i})>
+                        </td>
+                    </tr>
+                `
+                document.getElementById("isiMadding").innerHTML = output
+            }
+        }
+
+
+    }
+    function deleteKegiatan(index){
+        kegiatan.splice(index,1)
+        printIsiMadding('admin')
+    }
+    function cancelDelete(){
+        printIsiMadding('admin')
+    }
+
+    function editKegiatan(index){
+        var output = ''
+        for(var i = 0 ; i<kegiatan.length ; i++){
+            if(i==index){
+                output += `
+                <tr>
+                        <td><input type ="text"</td>
+                        <td>${kegiatan[i].namaKegiatan}</td>
+                        <td>${kegiatan[i].hari}</td>
+                        <td><img src="${kegiatan[i].poster}" alt=${kegiatan[i].namaKegiatan} width="100px" ></td>
+                        <td> <input type="button" value ="Yes" onclick="LakukanEdit(${i})">
+                            <input type="button" value ="No" onclick="cancelEdit()">
+                        </td>
+                    </tr>
+                `
+                document.getElementById("isiMadding").innerHTML = output
+            }
+            
+            else {
+                output += `
+                <tr>
+                        <td>${i+1}</td>
+                        <td>${kegiatan[i].namaKegiatan}</td>
+                        <td>${kegiatan[i].hari}</td>
+                        <td><img src="${kegiatan[i].poster}" alt=${kegiatan[i].namaKegiatan} width="100px" ></td>
+                        <td> <input type="button" value ="Delete" onclick=kofirmasiDelete(${i})>
+                            <input type="button" value ="Edit" onclick=editKegiatan(${i})>
+                        </td>
+                    </tr>
+                `
+                document.getElementById("isiMadding").innerHTML = output
+            }
+        }
+
+
+
+
+    }
+
+    function addToDo(){
+
+    }
+    
+
+    function logout(){
+       login()
+
+    }
+
+
+
+</script>
+</html>
